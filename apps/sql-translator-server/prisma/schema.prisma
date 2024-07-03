@@ -1,0 +1,26 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DB_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model QueryRequest {
+  createdAt        DateTime          @default(now())
+  description      String?
+  executionResults ExecutionResult[]
+  id               String            @id @default(cuid())
+  translatedSql    String?
+  updatedAt        DateTime          @updatedAt
+}
+
+model ExecutionResult {
+  createdAt      DateTime      @default(now())
+  id             String        @id @default(cuid())
+  queryRequest   QueryRequest? @relation(fields: [queryRequestId], references: [id])
+  queryRequestId String?
+  result         Json?
+  updatedAt      DateTime      @updatedAt
+}
